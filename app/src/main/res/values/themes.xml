@@ -1,0 +1,22 @@
+<resources>
+    <!-- Plain platform Material theme - no AppCompat/Material-Components
+         library needed, keeping the app dependency-free. -->
+    <style name="Theme.SpotifyAdExit" parent="android:Theme.Material.NoActionBar">
+        <item name="android:colorBackground">@color/background_dark</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:statusBarColor">@color/background_dark</item>
+        <item name="android:navigationBarColor">@color/background_dark</item>
+    </style>
+
+    <!-- Used only by LockScreenWakeActivity: an invisible window whose sole
+         purpose is to wake the display and appear above the keyguard for a
+         moment before we drive the Recents UI. -->
+    <style name="Theme.SpotifyAdExit.Transparent" parent="android:Theme.Translucent.NoTitleBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+</resources>

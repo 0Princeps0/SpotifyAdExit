@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Keep the monitor alive as a foreground service while Spotify may show ads -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- Required to show the persistent monitoring notification on Android 13+ -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Restart monitoring after the phone reboots, if it was left ON -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Briefly wake the screen to perform the recents-swipe when the ad
+         starts while the phone is locked/asleep -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Only used to deep-link the user to the exemption screen; the user
+         must grant it explicitly, this app does not force it -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <!-- Android 11+ package visibility: we only ever need to see Spotify -->
+    <queries>
+        <package android:name="com.spotify.music" />
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.SpotifyAdExit"
+        android:supportsRtl="true">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Transparent helper activity used only to wake the screen and
+             surface a window above the keyguard immediately before we
+             drive the Recents UI, when the ad starts while the phone is
+             locked/asleep. It shows nothing meaningful and closes itself. -->
+        <activity
+            android:name=".LockScreenWakeActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:theme="@style/Theme.SpotifyAdExit.Transparent" />
+
+        <!-- Persistent foreground service that owns the Spotify media-session
+             watcher and shows the "Monitoring" notification. -->
+        <service
+            android:name=".service.MonitorForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            tools:targetApi="34">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Watches Spotify's own media session to detect ad playback and restore the paused track; does not access other apps' data." />
+        </service>
+
+        <!-- Grants this app access to MediaSessionManager.getActiveSessions()
+             for all apps (needed to read Spotify's MediaMetadata/PlaybackState)
+             once the user enables Notification Access for this app. -->
+        <service
+            android:name=".service.SpotifyNotificationListenerService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <!-- Performs the on-screen "remove Spotify from Recents, then reopen
+             it" action using standard AccessibilityService global actions and
+             gesture dispatch. Requires the user to enable it under
+             Settings > Accessibility. -->
+        <service
+            android:name=".service.SpotifyAdSkipAccessibilityService"
+            android:exported="true"
+            android:label="@string/accessibility_service_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <receiver
+            android:name=".service.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">SpotifyAdExit</string>
+    <string name="accessibility_service_label">SpotifyAdExit Ad Skipper</string>
+    <string name="accessibility_service_description">Lets SpotifyAdExit reproduce the manual "swipe Spotify away from Recents, then reopen it" action to skip an ad. It only acts on the Spotify app after this app detects an ad is playing, and only performs the standard system Recents-dismiss gesture plus relaunching Spotify. It does not read or act on content in other apps.</string>
+
+    <string name="notif_channel_name">Spotify ad monitoring</string>
+    <string name="notif_channel_desc">Shows that SpotifyAdExit is watching Spotify\'s playback state</string>
+    <string name="notif_title_idle">SpotifyAdExit — monitoring</string>
+    <string name="notif_title_playing">SpotifyAdExit — Spotify playing</string>
+    <string name="notif_title_ad">SpotifyAdExit — ad detected, skipping…</string>
+
+    <string name="label_monitoring">Monitoring</string>
+    <string name="label_spotify_status">Spotify status</string>
+    <string name="label_current_track">Current track</string>
+    <string name="label_permissions">Permissions</string>
+    <string name="label_notification_access">Notification access (reads Spotify\'s media session)</string>
+    <string name="label_accessibility_access">Accessibility service (performs the recents-swipe + reopen)</string>
+    <string name="label_battery_exempt">Battery optimization exemption (recommended)</string>
+    <string name="btn_grant">Grant</string>
+    <string name="btn_force_skip">Force skip now (test)</string>
+    <string name="btn_clear_logs">Clear log</string>
+    <string name="btn_mark_as_ad">Mark current track as ad</string>
+    <string name="status_not_running">Not running</string>
+    <string name="status_granted">Granted</string>
+    <string name="status_not_granted">Not granted</string>
+    <string name="none_placeholder">—</string>
+</resources>
