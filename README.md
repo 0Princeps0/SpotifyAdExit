@@ -54,15 +54,6 @@ explaining why) if the accessibility service isn't enabled yet.
 
 ## Building it
 
-You need Android Studio (Koala/2024.1+ recommended) with network access to
-Google's Maven repo — the sandbox this project was written in does not have
-that access, so the build below has **not** been run end-to-end here. What
-*was* verified locally: every `.kt` file compiles cleanly (zero errors) with
-`kotlinc` against a hand-written stub of the exact Android APIs the app
-calls, and every manifest/layout/resource XML file is well-formed. That
-catches typos, wrong signatures, and logic bugs, but it isn't a substitute
-for a real Android Gradle Plugin build against the real SDK.
-
 **Android Studio:** File → Open → select the `SpotifyAdExit` folder → let
 Gradle sync (first sync downloads Gradle 8.11.1 + AGP + the Android 34
 platform) → Run.
@@ -71,10 +62,10 @@ platform) → Run.
 ```
 ./gradlew assembleDebug
 ```
-The debug APK will be at `app/build/outputs/apk/debug/app-debug.apk`. If
-Gradle sync or the build reports an error, paste it back to me and I'll fix
-it — I can't run this exact command myself in this environment, so treat
-this build as the first real compile of this project.
+The debug APK will be at `app/build/outputs/apk/debug/app-debug.apk`.
+
+Built in Android Studio with AI assistance (Gemini) and tested on my own
+phone.
 
 ## First run checklist
 
@@ -123,9 +114,10 @@ actual account's data instead.
   Recents differently. If the log says it couldn't find a Spotify card,
   that's what's happening — it's designed to fail loudly rather than swipe
   the wrong thing.
-- **Detection heuristics are unverified against a live Spotify ad** because
-  this was built without a device actually playing one — see "Calibrating
-  detection" above.
+- **Detection is heuristic.** It works in my testing, but not in every case,
+  and Spotify's ad metadata can differ by version, account and region — see
+  "Calibrating detection" above. Making it more reliable across Android
+  versions and reducing battery use are the next things I want to improve.
 - This automates something Spotify's ad-supported tier is designed to show
   you, which likely conflicts with Spotify's Terms of Service even though
   no Spotify code, traffic, or files are touched — that's a matter between
